@@ -348,7 +348,7 @@ toolitp when inside of function call.
       (define-key map "%" nil))
     (if fortpy:complete-on-bracket
         (define-key map "(" 'fortpy:bracket-complete)
-      (defin-key may "(" nil)))
+      (define-key may "(" nil)))
   (if fortpy-mode
       (progn
         (when fortpy:install-imenu
