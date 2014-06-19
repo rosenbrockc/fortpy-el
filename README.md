@@ -11,21 +11,21 @@ Fortpy-el provides an lisp package for emacs that integrates with [fortpy](https
 The emacs package will hopefully be on MELPA soon so it can be downloaded and installed easily. If you don't already have MELPA added to your packages list, you can execute the following in your `*scratch*` buffer (using `C-x C-e`.
 
 ```lisp
-    ;; Standard package.el + MELPA setup
-    ;; (See also: https://github.com/milkypostman/melpa#usage)
-    (require 'package)
-    (add-to-list 'package-archives
-                 '("melpa" . "http://melpa.milkbox.net/packages/") t)
-    (package-initialize)
+;; Standard package.el + MELPA setup
+;; (See also: https://github.com/milkypostman/melpa#usage)
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
 ```
 
 Once MELPA is on your package-archives list, execute `M-x package-install RET fortpy RET`. After installing the package in emacs, add the following lines to your `.emacs` file.
 
 ```lisp
-   ;; Standard fortpy.el setting
-   (add-hook 'f90-mode-hook 'fortpy:setup)
-   (setq fortpy:complete-on-percent t)
-   (setq fortpy:complete-on-bracket t)
+;; Standard fortpy.el setting
+(add-hook 'f90-mode-hook 'fortpy:setup)
+(setq fortpy:complete-on-percent t)
+(setq fortpy:complete-on-bracket t)
 ```
 
 ### Troubleshooting the Installation
@@ -46,15 +46,15 @@ Screenshots
 
 Here are some of the things you can do once Fortpy is integrated with Emacs using fortpy.el:
 
-![Automatic Signature Suggestions](https://github.com/rosenbrockc/fortpy/blob/master/docs/screenshots/signature.png "Help with call signatures of functions and subroutines.")
+![Automatic Signature Suggestions](../master/docs/screenshots/signature.png "Help with call signatures of functions and subroutines.")
 
 Help with call signatures of functions and subroutines.
 
-![Embedded Member Suggestions](https://github.com/rosenbrockc/fortpy/blob/master/docs/screenshots/completion.png "Completion suggestions for both methods and variables embedded in user-defined types.")
+![Embedded Member Suggestions](../master/docs/screenshots/completion.png "Completion suggestions for both methods and variables embedded in user-defined types.")
 
 Completion suggestions for both methods and variables embedded in user-defined types.
 
-![Bracket Complete Embedded Methods](https://github.com/rosenbrockc/fortpy/blob/master/docs/screenshots/bracket_complete.png "Documentation strings for methods embedded in user-defined types")
+![Bracket Complete Embedded Methods](../master/docs/screenshots/bracket_complete.png "Documentation strings for methods embedded in user-defined types")
 
 Documentation strings for methods embedded in user-defined types.
  
