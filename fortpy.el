@@ -110,6 +110,23 @@
 (defconst fortpy-regex-operator "[-*+/]"
   "Regex for matching mathematical logic operators in Fortran.")
 
+;;;###autoload
+(defun fortpy:add-custom-font-lock-keywords()
+  "Adds font-lock keywords to the f90 mode for the XML documentation strings."
+  (interactive)
+  (font-lock-add-keywords 'f90-mode
+                          '(('fortpy-regex-xml-tags 1 'fortpy-xml-doc-face prepend)
+                            ('fortpy-regex-xml-doc-links 1 'fortpy-xml-doc-link-face prepend)
+                            ('fortpy-regex-xml-attribute-value 
+                             (1 'fortpy-xml-doc-attribute-face)
+                             (2 'fortpy-xml-doc-value-face)
+                             prepend
+                             )
+                            ('fortpy-regex-percent . 'fortpy-percent-face)
+                            ('fortpy-regex-operator . 'fortpy-operator-face)
+                            ))
+  )
+
 (defconst fortpy:version "1.0.3")
 
 (defvar fortpy:source-dir (if load-file-name
@@ -818,21 +835,6 @@ in their Emacs configuration."
     (goto-char (point-min))
     (fill-paragraph justify)
     (buffer-string)))
-
-;;;###autoload
-(defun fortpy:add-custom-font-lock-keywords()
-  "Adds font-lock keywords to the f90 mode for the XML documentation strings."
-  (font-lock-add-keywords 'f90-mode
-                          '(('fortpy-regex-xml-tags 1 'fortpy-xml-doc-face)
-                            ('fortpy-regex-xml-doc-links 1 'fortpy-xml-doc-link-face)
-                            ('fortpy-regex-xml-attribute-value 
-                             (1 'fortpy-xml-doc-attribute-face)
-                             (2 'fortpy-xml-doc-value-face)
-                             )
-                            ('fortpy-regex-percent . 'fortpy-percent-face)
-                            ('fortpy-regex-operator . 'fortpy-operator-face)
-                            ))
-  )
 
 
 ;;; Goto
