@@ -40,13 +40,77 @@
 (require 'python-environment)
 (declare-function pos-tip-show "pos-tip")
 
-
 (defgroup fortpy nil
   "Auto-completion for Fortran 2003."
   :group 'completion
   :prefix "fortpy:")
 
-(defconst fortpy:version "1.0")
+(defgroup fortpy-faces nil
+  "Faces for XML documentation highlighting in f90 mode"
+  :tag "Color Scheme"
+  :group 'fortpy
+  :link '(custom-group-link "fortpy")
+  :prefix "fortpy-faces-"
+  )
+
+(defface fortpy-xml-doc-face
+  '((((background light)) (:foreground "#518751"))
+    (((background dark)) (:foreground "#518751")))
+  "Face to highlight XML keywords in documentation tags."
+  :group 'fortpy-faces)
+
+(defface fortpy-xml-doc-link-face
+  '((((background light)) (:foreground "#858751"))
+    (((background dark)) (:foreground "#858751")))
+  "Face to highlight XML links (e.g. CREF, QUIRK, TODO) in documentation tags."
+  :group 'fortpy-faces)
+
+(defface fortpy-xml-doc-attribute-face
+  '((((background light)) (:foreground "#876951"))
+    (((background dark)) (:foreground "#876951")))
+  "Face to highlight XML attributes in the documentation tags."
+  :group 'fortpy-faces)
+
+(defface fortpy-xml-doc-value-face
+  '((((background light)) (:foreground "#875187"))
+    (((background dark)) (:foreground "#875187")))
+  "Face to highlight XML attribute values in the documentation tags."
+  :group 'fortpy-faces)
+
+(defface fortpy-xml-doc-error-face
+  '((((background light)) (:foreground "#9E1919" :background "#FAE8E8" :weight bold))
+    (((background dark)) (:foreground "#9E1919" :background "#FAE8E8" :weight bold)))
+  "Face to highlight bad use of !! in comments that break the documentation parser."
+  :group 'fortpy-faces)
+
+(defface fortpy-percent-face
+  '((((background light)) (:foreground "#FF5252" :height 75))
+    (((background dark)) (:foreground "#FF5252" :height 75)))
+  "Face to make the '%' character small and stick out more."
+  :group 'fortpy-faces)
+
+(defface fortpy-operator-face
+  '((((background light)) (:foreground "#599EE3"))
+    (((background dark)) (:foreground "#599EE3")))
+  "Face to make the '%' character small and stick out more."
+  :group 'fortpy-faces)
+
+(defvar fortpy-regex-xml-tags "!?<\\(/?\\(summary\\|usage\\|comments\\|parameter\\|errors\\|group\\|member\\|local\\|prereq\\|instance\\|outcome\\|mapping\\|run\\|global\\|revision\\|dimension\\)\\)[^>]*>"
+  "Regex for matching recognized XML tags in the documentation.")
+
+(defvar fortpy-regex-xml-doc-links "\\(@CREF\\|QUIRK\\|TODO\\)"
+  "Regex for matching XML documentation links.")
+
+(defconst fortpy-regex-xml-attribute-value "!?<[a-z]+\\( +[a-z]+\\)=\"\\([A-Za-z0-9_ ,./]+\\)\""
+  "Regex for matching XML attributes and values.")
+
+(defconst fortpy-regex-percent "%"
+  "Regex for matching % in Fortran.")
+
+(defconst fortpy-regex-operator "[-*+/]"
+  "Regex for matching mathematical logic operators in Fortran.")
+
+(defconst fortpy:version "1.0.3")
 
 (defvar fortpy:source-dir (if load-file-name
                             (file-name-directory load-file-name)
@@ -369,6 +433,27 @@ toolitp when inside of function call.
   (define-key map (kbd "C-c ?") 'fortpy:show-doc)
   (define-key map (kbd "C-c .") 'fortpy:goto-definition)
   (define-key map (kbd "C-c ,") 'fortpy:goto-definition-pop-marker)
+  (define-key map [?\H-.] (lambda () 
+                           (interactive) 
+                           (insert "!!<summary></summary>") 
+                           (backward-char 10)))
+  (define-key map (kbd "H-y") (lambda () 
+                               (interactive) 
+                               (insert "!!<local name=\"\"></local>") 
+                               (backward-char 10)))
+  (define-key map (kbd "H-p") (lambda () 
+                               (interactive) 
+                               (insert "!!<parameter name=\"\"></parameter>") 
+                               (backward-char 14)))
+  (define-key map [?\H-'] (lambda () 
+                           (interactive) 
+                           (insert "!!<comments></comments>") 
+                           (backward-char 11)))
+  (define-key map [?\H-,] (lambda () 
+                           (interactive) 
+                           (insert "@CREF[]") 
+                           (backward-char 1)))
+
   (let ((command (cond
                   ((featurep 'helm) 'helm-fortpy-related-names)
                   ((featurep 'anything) 'anything-fortpy-related-names)
@@ -733,6 +818,21 @@ in their Emacs configuration."
     (goto-char (point-min))
     (fill-paragraph justify)
     (buffer-string)))
+
+;;;###autoload
+(defun fortpy:add-custom-font-lock-keywords()
+  "Adds font-lock keywords to the f90 mode for the XML documentation strings."
+  (font-lock-add-keywords 'f90-mode
+                          '(('fortpy-regex-xml-tags 1 'fortpy-xml-doc-face)
+                            ('fortpy-regex-xml-doc-links 1 'fortpy-xml-doc-link-face)
+                            ('fortpy-regex-xml-attribute-value 
+                             (1 'fortpy-xml-doc-attribute-face)
+                             (2 'fortpy-xml-doc-value-face)
+                             )
+                            ('fortpy-regex-percent . 'fortpy-percent-face)
+                            ('fortpy-regex-operator . 'fortpy-operator-face)
+                            ))
+  )
 
 
 ;;; Goto
@@ -1147,6 +1247,7 @@ You can also call this function as a command, to quickly test
 what fortpy can do."
   (interactive)
   (fortpy:ac-setup)
+  (fortpy:add-custom-font-lock-keywords)
   (fortpy-mode 1))
 
 
