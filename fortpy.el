@@ -172,13 +172,13 @@ to make this setting work."
 
 .. NOTE::
 
-   If you used `fortpy:install-server' (recommended) to install
+   If you used `fortpy-install-server' (recommended) to install
    Python server fortpyepcserver.py, you don't need to mess around
    with fortpyepcserver.py.  Fortpy.el handles everything
    automatically.
 
 If you install Python server fortpyepcserver.py using
-`fortpy:install-server' command, `fortpy:server-command' should be
+`fortpy-install-server' command, `fortpy:server-command' should be
 automatically set to::
 
     '(\"~/.emacs.d/.python-environments/default/bin/fortpyepcserver.py\")
@@ -257,19 +257,19 @@ GUI: M-x `epc:controller'.  You will see a table of EPC connections
 for Fortpy.el and other EPC applications.
 
 If you want to start a new ad-hoc server for the current buffer,
-use the command `fortpy:start-dedicated-server'."
+use the command `fortpy-start-dedicated-server'."
   :group 'fortpy)
 
 (defcustom fortpy:complete-on-percent nil
   "Non-`nil' means automatically start completion after inserting a percent.
-To make this option work, you need to use `fortpy:setup' instead of
-`fortpy:ac-setup' to start Fortpy."
+To make this option work, you need to use `fortpy-setup' instead of
+`fortpy-ac-setup' to start Fortpy."
   :group 'fortpy)
 
 (defcustom fortpy:complete-on-bracket nil
   "Non-`nil' means automatically start completion after inserting a '('.
-To make this option work, you need to use `fortpy:setup' instead of
-`fortpy:ac-setup' to start Fortpy."
+To make this option work, you need to use `fortpy-setup' instead of
+`fortpy-ac-setup' to start Fortpy."
   :group 'fortpy)
 
 (defcustom fortpy:tooltip-method '(pos-tip popup)
@@ -298,11 +298,11 @@ tooltip in millisecond."
     (t   nil        t  )
     (nil definition t  )
     (t   definition t  ))
-  "Configure how prefix argument modifies `fortpy:goto-definition' behavior.
+  "Configure how prefix argument modifies `fortpy-goto-definition' behavior.
 
 Each element of the list is arguments (list) passed to
-`fortpy:goto-definition'.  Note that this variable has no effect on
-`fortpy:goto-definition' when it is used as a lisp function
+`fortpy-goto-definition'.  Note that this variable has no effect on
+`fortpy-goto-definition' when it is used as a lisp function
 
 The following setting is default (last parts are omitted).
 Nth element is used as the argument when N universal prefix
@@ -360,15 +360,15 @@ Default is `fortpy:create-nested-imenu-index'."
   :group 'fortpy)
 
 (defcustom fortpy:key-complete (kbd "<C-tab>")
-  "Keybind for command `fortpy:complete'."
+  "Keybind for command `fortpy-complete'."
   :group 'fortpy)
 
 (defcustom fortpy:key-goto-definition (kbd "C-.")
-  "Keybind for command `fortpy:goto-definition'."
+  "Keybind for command `fortpy-goto-definition'."
   :group 'fortpy)
 
 (defcustom fortpy:key-show-doc (kbd "C-c d")
-  "Keybind for command `fortpy:show-doc'."
+  "Keybind for command `fortpy-show-doc'."
   :group 'fortpy)
 
 (defcustom fortpy:key-related-names (kbd "C-c r")
@@ -376,19 +376,19 @@ Default is `fortpy:create-nested-imenu-index'."
   :group 'fortpy)
 
 (defcustom fortpy:key-goto-definition-pop-marker (kbd "C-,")
-  "Keybind for command `fortpy:goto-definition-pop-marker'."
+  "Keybind for command `fortpy-goto-definition-pop-marker'."
   :group 'fortpy)
 
 (defcustom fortpy:use-shortcuts nil
   "If non-`nil', enable the following shortcuts:
 
-| ``M-.``  `fortpy:goto-definition'
-| ``M-,``  `fortpy:goto-definition-pop-marker'
+| ``M-.``  `fortpy-goto-definition'
+| ``M-,``  `fortpy-goto-definition-pop-marker'
 "
   :group 'fortpy)
 
 (defcustom fortpy:goto-definition-marker-ring-length 16
-  "Length of marker ring to store `fortpy:goto-definition' call positions"
+  "Length of marker ring to store `fortpy-goto-definition' call positions"
   :group 'fortpy)
 
 
@@ -418,15 +418,15 @@ toolitp when inside of function call.
   :group 'fortpy
   (let ((map fortpy-mode-map))
     (when fortpy:use-shortcuts
-      (define-key map (kbd "M-.") 'fortpy:goto-definition)
-      (define-key map (kbd "M-,") 'fortpy:goto-definition-pop-marker))
+      (define-key map (kbd "M-.") 'fortpy-goto-definition)
+      (define-key map (kbd "M-,") 'fortpy-goto-definition-pop-marker))
     (if fortpy:complete-on-percent
-        (define-key map "%" 'fortpy:percent-complete)
+        (define-key map "%" 'fortpy-percent-complete)
       (define-key map "%" nil))
     (if fortpy:complete-on-bracket
-        (define-key map "(" 'fortpy:bracket-complete)
+        (define-key map "(" 'fortpy-bracket-complete)
       (define-key may "(" nil)))
-  (fortpy:add-custom-font-lock-keywords)
+  (fortpy-add-custom-font-lock-keywords)
   (if fortpy-mode
       (progn
         (when fortpy:install-imenu
@@ -442,10 +442,10 @@ toolitp when inside of function call.
 
 ;; Define keybinds.
 (let ((map fortpy-mode-map))
-  (define-key map (kbd "<C-tab>") 'fortpy:complete)
-  (define-key map (kbd "M-?") 'fortpy:show-doc)
-  (define-key map (kbd "M-.") 'fortpy:goto-definition)
-  (define-key map (kbd "M-,") 'fortpy:goto-definition-pop-marker)
+  (define-key map (kbd "<C-tab>") 'fortpy-complete)
+  (define-key map (kbd "M-?") 'fortpy-show-doc)
+  (define-key map (kbd "M-.") 'fortpy-goto-definition)
+  (define-key map (kbd "M-,") 'fortpy-goto-definition-pop-marker)
   (define-key map [?\H-.] (lambda () 
                            (interactive) 
                            (insert "!!<summary></summary>") 
@@ -496,7 +496,7 @@ associated processes to nil."
                   (epc:start-epc server-prog server-args)
                 (display-warning 'fortpy "\
 Failed to start Fortpy EPC server.
-*** You may need to run \"M-x fortpy:install-server\". ***
+*** You may need to run \"M-x fortpy-install-server\". ***
 This could solve the problem especially if you haven't run the command yet
 since Fortpy.el installation or update and if the server complains about
 Python module imports." :error))))
@@ -564,7 +564,7 @@ key, or start new one if there is none."
                     (append fortpy:server-command fortpy:server-args))))
   fortpy:epc)
 
-(defun fortpy:stop-server ()
+(defun fortpy-stop-server ()
   "Stop Fortpy server.  Use this command when you want to restart
 Fortpy server (e.g., when you changed `fortpy:server-command' or
 `fortpy:server-args').  Fortpy server will be restarted automatically
@@ -584,7 +584,7 @@ later when it is needed."
     (fortpy:start-server)))
 
 ;;;###autoload
-(defun fortpy:start-dedicated-server (command)
+(defun fortpy-start-dedicated-server (command)
   "Start Fortpy server dedicated to this buffer.
 This is useful, for example, when you want to use different
 `sys.path' for some buffer.  When invoked as an interactive
@@ -647,7 +647,7 @@ See also: `fortpy:server-args'."
       (setq fortpy:complete-reply reply))))
 
 ;;;###autoload
-(defun* fortpy:complete (&key (expand ac-expand-on-auto-complete))
+(defun* fortpy-complete (&key (expand ac-expand-on-auto-complete))
   "Complete code at point."
   (interactive)
   (lexical-let ((expand expand))
@@ -658,16 +658,16 @@ See also: `fortpy:server-args'."
 ;; Calling `auto-complete' or `ac-update-greedy' instead of `ac-start'
 ;; here did not work.
 
-(defun fortpy:percent-complete ()
+(defun fortpy-percent-complete ()
   "Insert percent and complete code at point."
   (interactive)
   (insert "%")
   (unless (or (ac-cursor-on-diable-face-p)
               ;; don't complete if the percent is immediately after int literal
               (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[0-9]+%"))
-    (fortpy:complete :expand nil)))
+    (fortpy-complete :expand nil)))
 
-(defun fortpy:bracket-complete ()
+(defun fortpy-bracket-complete ()
   "Insert bracket and complete code at point."
   (interactive)
   (insert "(")
@@ -676,7 +676,7 @@ See also: `fortpy:server-args'."
               ;; +-/*= since that falls under arithmetic
               ;;and we are trying to complete function signatures.
               (looking-back "\\(\\`\\|[^._[:alnum:]]\\)[\\s-+\\-\/*=]+"))
-    (fortpy:get-bracket-complete)))
+    (fortpy-get-bracket-complete)))
 
 
 ;;; AC source
@@ -705,13 +705,13 @@ See also: `fortpy:server-args'."
     (requires . -1)))
 
 ;;;###autoload
-(defun fortpy:ac-setup ()
+(defun fortpy-ac-setup ()
   "Add Fortpy AC sources to `ac-sources'.
 
 If auto-completion is all you need, you can call this function instead
-of `fortpy:setup', like this::
+of `fortpy-setup', like this::
 
-   (add-hook 'python-mode-hook 'fortpy:ac-setup)
+   (add-hook 'python-mode-hook 'fortpy-ac-setup)
 
 Note that this function calls `auto-complete-mode' if it is not
 already enabled, for people who don't call `global-auto-complete-mode'
@@ -722,7 +722,7 @@ in their Emacs configuration."
     (auto-complete-mode)))
 
 ;;;###autoload
-(defun fortpy:add-custom-font-lock-keywords()
+(defun fortpy-add-custom-font-lock-keywords()
   "Adds font-lock keywords to the f90 mode for the XML documentation strings."
   (interactive)
   (font-lock-add-keywords nil
@@ -775,7 +775,7 @@ in their Emacs configuration."
     (message (concat "Fortpy Reparse: " reply))
   ))
 
-(defun fortpy:reparse-buffer-file ()
+(defun fortpy-reparse-buffer-file ()
   "Manually reparse the current buffer file."
   (interactive)
   (message "Fortpy Reparse: Working...")
@@ -783,7 +783,7 @@ in their Emacs configuration."
     (fortpy:call-deferred 'reparse_module)
     #'fortpy:get-reparse-buffer-file-response))
 
-(defun fortpy:get-in-function-call ()
+(defun fortpy-get-in-function-call ()
   "Manually show call signature tooltip."
   (interactive)
   (deferred:nextc
@@ -809,7 +809,7 @@ in their Emacs configuration."
             (lambda ()
               (setq fortpy:get-in-function-call--d nil))))))
 
-(defun fortpy:get-bracket-complete ()
+(defun fortpy-get-bracket-complete ()
   "Manually show call signature tooltip after '('."
   (interactive)
   (deferred:nextc
@@ -850,9 +850,9 @@ in their Emacs configuration."
 (defvar fortpy:goto-definition--cache nil)
 (defvar fortpy:goto-definition--marker-ring
   (make-ring fortpy:goto-definition-marker-ring-length)
-  "Marker ring that stores `fortpy:goto-definition' call positions")
+  "Marker ring that stores `fortpy-goto-definition' call positions")
 
-(defun fortpy:goto-definition (&optional other-window deftype use-cache index)
+(defun fortpy-goto-definition (&optional other-window deftype use-cache index)
   "Goto the definition of the object at point.
 
 See `fortpy:goto-definition-config' for how this function works
@@ -878,9 +878,9 @@ INDEX-th result."
          fortpy:goto-definition--cache)
     (setq fortpy:goto-definition--index (or index 0))
     (fortpy:goto-definition--nth other-window))
-   ((and (eq last-command 'fortpy:goto-definition)
+   ((and (eq last-command 'fortpy-goto-definition)
          (> (length fortpy:goto-definition--cache) 1))
-    (fortpy:goto-definition-next other-window))
+    (fortpy-goto-definition-next other-window))
    (t
     (setq fortpy:goto-definition--index (or index 0))
     (lexical-let ((other-window other-window))
@@ -896,8 +896,8 @@ INDEX-th result."
   "Push point onto goto-definition marker ring."
   (ring-insert fortpy:goto-definition--marker-ring (point-marker)))
 
-(defun fortpy:goto-definition-pop-marker ()
-  "Goto the last point where `fortpy:goto-definition' was called."
+(defun fortpy-goto-definition-pop-marker ()
+  "Goto the last point where `fortpy-goto-definition' was called."
   (interactive)
   (if (ring-empty-p fortpy:goto-definition--marker-ring)
       (error "Fortpy marker ring is empty, can't pop")
@@ -908,8 +908,8 @@ INDEX-th result."
       ;; Cleanup the marker so as to avoid them piling up.
       (set-marker marker nil nil))))
 
-(defun fortpy:goto-definition-next (&optional other-window)
-  "Goto the next cached definition.  See: `fortpy:goto-definition'."
+(defun fortpy-goto-definition-next (&optional other-window)
+  "Goto the next cached definition.  See: `fortpy-goto-definition'."
   (interactive "P")
   (let ((len (length fortpy:goto-definition--cache))
         (n (1+ fortpy:goto-definition--index)))
@@ -965,10 +965,10 @@ INDEX-th result."
      len
      ;; Note: It must be `last-command', not `last-command' because
      ;;       this function is called in deferred at the first time.
-     (if (eq last-command 'fortpy:goto-definition)
+     (if (eq last-command 'fortpy-goto-definition)
          (format "  Type %s to go to the next point."
                  (key-description
-                  (car (where-is-internal 'fortpy:goto-definition))))
+                  (car (where-is-internal 'fortpy-goto-definition))))
        ""))))
 
 
@@ -1036,7 +1036,7 @@ INDEX-th result."
 
 (defvar fortpy:doc-buffer-name "*fortpy:doc*")
 
-(defun fortpy:show-doc ()
+(defun fortpy-show-doc ()
   "Show the documentation of the object at point."
   (interactive)
   (deferred:nextc (fortpy:call-deferred 'get_definition)
@@ -1139,7 +1139,7 @@ See also `fortpy:imenu-create-index-function'."
 
 ;;; Meta info
 
-(defun fortpy:show-setup-info ()
+(defun fortpy-show-setup-info ()
   "Show installation and configuration info in a buffer.
 Paste the result of this function when asking question or
 reporting bug.  This command also tries to detect errors when
@@ -1162,7 +1162,7 @@ may find some information about communication error."
                    (deferred:error it
                      (lambda (err) `(:error ,err)))))
               (error `(:sync-error ,err)))))
-    (let ((standard-output (get-buffer-create "*fortpy:show-setup-info*")))
+    (let ((standard-output (get-buffer-create "*fortpy-show-setup-info*")))
       (with-current-buffer standard-output
         (emacs-lisp-mode)
         (erase-buffer)
@@ -1212,7 +1212,7 @@ may find some information about communication error."
   "Request version of Python modules and return a deferred object."
   (epc:call-deferred (fortpy:get-epc) 'get_fortpy_version nil))
 
-(defun fortpy:show-version-info ()
+(defun fortpy-show-version-info ()
   "Show version info of Python modules used by the server.
 Paste the result of this function in bug report."
   (interactive)
@@ -1226,9 +1226,6 @@ Paste the result of this function in bug report."
           (pp reply)
           (display-buffer standard-output))))))
 
-(define-obsolete-function-alias
-  'fortpy:show-fortpy-version 'fortpy:show-version-info "0.0")
-
 (defun fortpy:print-fortpy-version ()
   (pp (epc:sync (fortpy:get-epc) (fortpy:get-fortpy-version-request))))
 
@@ -1236,21 +1233,20 @@ Paste the result of this function in bug report."
 ;;; Setup
 
 ;;;###autoload
-(defun fortpy:setup ()
+(defun fortpy-setup ()
   "Fully setup fortpy.el for current buffer.
-It setups `ac-sources' (calls `fortpy:ac-setup') and turns
+It setups `ac-sources' (calls `fortpy-ac-setup') and turns
 `fortpy-mode' on.
 
 This function is intended to be called from `python-mode-hook',
 like this::
 
-       (add-hook 'python-mode-hook 'fortpy:setup)
+       (add-hook 'python-mode-hook 'fortpy-setup)
 
 You can also call this function as a command, to quickly test
 what fortpy can do."
   (interactive)
-  (fortpy:ac-setup)
-  (fortpy:add-custom-font-lock-keywords)
+  (fortpy-ac-setup)
   (fortpy-mode 1))
 
 
@@ -1259,14 +1255,14 @@ what fortpy can do."
   `("pip" "install" "--upgrade" ,(convert-standard-filename fortpy:source-dir)))
 
 ;;;###autoload
-(defun fortpy:install-server ()
+(defun fortpy-install-server ()
   "This command installs Fortpy server script fortpyepcserver.py in a
 Python environment dedicated to Emacs.  By default, the
 environment is at ``~/.emacs.d/.python-environments/default/``.
 This environment is automatically created by ``virtualenv`` if it
 does not exist.
 
-Run this command (i.e., type ``M-x fortpy:install-server RET``)
+Run this command (i.e., type ``M-x fortpy-install-server RET``)
 whenever Fortpy.el shows a message to do so.  It is a good idea to
 run this every time after you update Fortpy.el to sync version of
 Python modules used by Fortpy.el and Fortpy.el itself.
@@ -1304,7 +1300,7 @@ location.
 
 ;;;###autoload
 (defun fortpy:install-server-block ()
-  "Blocking version `fortpy:install-server'."
+  "Blocking version `fortpy-install-server'."
   (prog1
       (python-environment-run-block fortpy:install-server--command
                                     fortpy:environment-root
@@ -1314,22 +1310,22 @@ location.
 
 ;;; Debugging
 
-(defun fortpy:pop-to-epc-buffer ()
+(defun fortpy-pop-to-epc-buffer ()
   "Open the buffer associated with EPC server process.
 Use this command to see the output (e.g., traceback) of the server process."
   (interactive)
   (pop-to-buffer (process-buffer (epc:manager-server-process fortpy:epc))))
 
-(defun fortpy:toggle-log-traceback ()
+(defun fortpy-toggle-log-traceback ()
   "Toggle on/off traceback logging for EPC server for the current buffer.
 When there is an error during traceback logging is enabled, traceback
-is printed in the EPC buffer.  You can use `fortpy:pop-to-epc-buffer' to
+is printed in the EPC buffer.  You can use `fortpy-pop-to-epc-buffer' to
 open that buffer.
 
 You can also pass ``--log-traceback`` option to fortpyepcserver.py
 to start server with traceback logging turned on.  This is useful when
 there is a problem in communication (thus this command does not work).
-You can use `fortpy:start-dedicated-server' to restart EPC server for the
+You can use `fortpy-start-dedicated-server' to restart EPC server for the
 current buffer with specific arguments."
   (interactive)
   (deferred:$
@@ -1341,14 +1337,14 @@ current buffer with specific arguments."
 (defvar fortpy:server-command--backup nil)
 (defvar fortpy:server-args--backup nil)
 
-(defun fortpy:toggle-debug-server ()
+(defun fortpy-toggle-debug-server ()
   "Setup `fortpy:server-command' and `fortpy:server-args' to debug
 server using pdb or ipdb.
 
 When this command is called, it essentially execute the following
 code::
 
-  (fortpy:stop-server)
+  (fortpy-stop-server)
   (setq fortpy:server-command (list \"cat\" \"fortpy-port.log\" )
         fortpy:server-args nil)
 
@@ -1373,14 +1369,14 @@ running server."
         (setq fortpy:server-command fortpy:server-command--backup
               fortpy:server-command--backup nil
               fortpy:server-args fortpy:server-args--backup)
-        (fortpy:stop-server)
+        (fortpy-stop-server)
         (message "Quit debugging.  Original setting restored."))
     (setq fortpy:server-command--backup fortpy:server-command
           fortpy:server-args--backup fortpy:server-args
           fortpy:server-command (list "cat" (expand-file-name
                                            "fortpy-port.log" fortpy:source-dir))
           fortpy:server-args nil)
-    (fortpy:stop-server)
+    (fortpy-stop-server)
     (kill-new "python fortpyepcserver.py --port-file fortpy-port.log --ipdb")
     (message "Now, start server with: --port-file fortpy-port.log --ipdb.\
  (command is copied in the kill-ring)")))
