@@ -405,7 +405,7 @@ toolitp when inside of function call.
       (define-key map "%" nil))
     (if fortpy-complete-on-bracket
         (define-key map "(" 'fortpy-bracket-complete)
-      (define-key may "(" nil)))
+      (define-key map "(" nil)))
   (fortpy-add-custom-font-lock-keywords)
   (if fortpy-mode
       (progn
