@@ -4,7 +4,7 @@
 ;; Adapted from the jedi.el script written by Takafumi Arakaki.
 
 ;; Author: Conrad Rosenbrock <rosenbrockc at gmail.com>
-;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0.0.2"))
+;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0.0.2") (pos-tip "0.4.5"))
 ;; Version: 1.0
 
 ;; This file is NOT part of GNU Emacs.
@@ -372,8 +372,7 @@ Default is `fortpy:create-nested-imenu-index'."
   :group 'fortpy)
 
 (defcustom fortpy:key-related-names (kbd "C-c r")
-  "Keybind for command `helm-fortpy-related-names' or
-`anything-fortpy-related-names'."
+  "Keybind for command `helm-fortpy-related-names'."
   :group 'fortpy)
 
 (defcustom fortpy:key-goto-definition-pop-marker (kbd "C-,")
@@ -442,12 +441,11 @@ toolitp when inside of function call.
     (fortpy:server-pool--gc-when-idle)))
 
 ;; Define keybinds.
-;; See: https://github.com/tkf/emacs-fortpy/issues/47
 (let ((map fortpy-mode-map))
   (define-key map (kbd "<C-tab>") 'fortpy:complete)
-  (define-key map (kbd "C-c ?") 'fortpy:show-doc)
-  (define-key map (kbd "C-c .") 'fortpy:goto-definition)
-  (define-key map (kbd "C-c ,") 'fortpy:goto-definition-pop-marker)
+  (define-key map (kbd "M-?") 'fortpy:show-doc)
+  (define-key map (kbd "M-.") 'fortpy:goto-definition)
+  (define-key map (kbd "M-,") 'fortpy:goto-definition-pop-marker)
   (define-key map [?\H-.] (lambda () 
                            (interactive) 
                            (insert "!!<summary></summary>") 
@@ -468,14 +466,7 @@ toolitp when inside of function call.
                            (interactive) 
                            (insert "@CREF[]") 
                            (backward-char 1)))
-
-  (let ((command (cond
-                  ((featurep 'helm) 'helm-fortpy-related-names)
-                  ((featurep 'anything) 'anything-fortpy-related-names)
-                  ((locate-library "helm") 'helm-fortpy-related-names)
-                  ((locate-library "anything") 'anything-fortpy-related-names))))
-    (when command
-      (define-key map (kbd "C-c /") command))))
+  (eval-after-load 'helm '(define-key map (kbd "C-c /") 'helm-fortpy-related-names)))
 
 
 ;;; EPC utils
@@ -623,8 +614,7 @@ See also: `fortpy:server-args'."
   (fortpy:start-server))
 
 (defun fortpy:-buffer-file-name ()
-  "Return `buffer-file-name' without text properties.
-See: https://github.com/tkf/emacs-fortpy/issues/54"
+  "Return `buffer-file-name' without text properties."
   (when (stringp buffer-file-name)
     (substring-no-properties buffer-file-name)))
 
@@ -1040,12 +1030,6 @@ INDEX-th result."
   "Find related names of the object at point using `helm' interface."
   (interactive)
   (fortpy:related-names--helm 'helm))
-
-;;;###autoload
-(defun anything-fortpy-related-names ()
-  "Find related names of the object at point using `anything' interface."
-  (interactive)
-  (fortpy:related-names--helm 'anything))
 
 
 ;;; Show document (get-definition)
