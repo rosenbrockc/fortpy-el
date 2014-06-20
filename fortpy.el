@@ -427,6 +427,7 @@ toolitp when inside of function call.
     (if fortpy:complete-on-bracket
         (define-key map "(" 'fortpy:bracket-complete)
       (define-key may "(" nil)))
+  (fortpy:add-custom-font-lock-keywords)
   (if fortpy-mode
       (progn
         (when fortpy:install-imenu
@@ -734,7 +735,7 @@ in their Emacs configuration."
 (defun fortpy:add-custom-font-lock-keywords()
   "Adds font-lock keywords to the f90 mode for the XML documentation strings."
   (interactive)
-  (font-lock-add-keywords 'f90-mode
+  (font-lock-add-keywords nil
                           `((,fortpy:regex-xml-tags 1 'fortpy-xml-doc-face prepend)
                             (,fortpy:regex-xml-doc-links 1 'fortpy-xml-doc-link-face prepend)
                             (,fortpy:regex-doc-comment (0 'fortpy-doc-comment-face t)
