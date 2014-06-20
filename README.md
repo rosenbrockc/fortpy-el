@@ -23,23 +23,23 @@ Once MELPA is on your package-archives list, execute `M-x package-install RET fo
 
 ```lisp
 ;; Standard fortpy.el setting
-(add-hook 'f90-mode-hook 'fortpy:setup)
-(setq fortpy:complete-on-percent t)
-(setq fortpy:complete-on-bracket t)
+(add-hook 'f90-mode-hook 'fortpy-setup)
+(setq fortpy-complete-on-percent t)
+(setq fortpy-complete-on-bracket t)
 ```
 
 ### Troubleshooting the Installation
 
 If you have trouble installing automatically from MELPA, you can also try a manual installation:
 
-1. Install the emacs dependencies [EPC](https://github.com/kiwanami/emacs-epc), [auto-complete](https://github.com/auto-complete/auto-complete) and [python-environment](https://github.com/tkf/emacs-python-environment) using the package manager in emacs.
+1. Install the emacs dependencies [EPC](https://github.com/kiwanami/emacs-epc), [auto-complete](https://github.com/auto-complete/auto-complete) and [python-environment](https://github.com/tkf/emacs-python-environment)using the package manager in emacs. _NOTE:_ [pos-tip](http://www.emacswiki.org/emacs/pos-tip.el) is also required, but you probably have it already.
 2. Download the fortpy-el repository and extract it to your emacs load path.
-3. Add (autoload 'fortpy:setup "fortpy" nil t) in your emacs configuration.
-4. Run `M-x fortpy:install-server RET`
+3. Add (autoload 'fortpy-setup "fortpy" nil t) in your emacs configuration.
+4. Run `M-x fortpy-install-server RET`
 
-**NOTE:** when you run `fortpy:install-server`, emacs will use `pip install` to add the fortpyepcserver.py to the default virtualenv managed by python-environment for emacs. As part of that setup, `pip` will also install [fortpy](https://github.com/rosenbrockc/fortpy) and its dependencies into the virtualenv.
+**NOTE:** when you run `fortpy-install-server`, emacs will use `pip install` to add the fortpyepcserver.py to the default virtualenv managed by python-environment for emacs. As part of that setup, `pip` will also install [fortpy](https://github.com/rosenbrockc/fortpy) and its dependencies into the virtualenv.
 
-If you are having trouble getting `fortpy:install-server` to work, manually run `pip install --upgrade virtualenv` and `pip install --upgrade epc` outside of emacs. Then delete the _~/.emacs.d/.python-environments/default/_ folder and re-run `fortpy:install-server`.
+If you are having trouble getting `fortpy-install-server` to work, manually run `pip install --upgrade virtualenv` and `pip install --upgrade epc` outside of emacs. Then delete the _~/.emacs.d/.python-environments/default/_ folder and re-run `fortpy-install-server`.
 
 Screenshots
 ------
