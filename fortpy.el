@@ -95,37 +95,34 @@
   "Face to make the '%' character small and stick out more."
   :group 'fortpy-faces)
 
-(defvar fortpy-regex-xml-tags "!?<\\(/?\\(summary\\|usage\\|comments\\|parameter\\|errors\\|group\\|member\\|local\\|prereq\\|instance\\|outcome\\|mapping\\|run\\|global\\|revision\\|dimension\\)\\)[^>]*>"
-  "Regex for matching recognized XML tags in the documentation.")
+(defface fortpy-doc-comment-face
+ '((((background light)) (:foreground "#1B5C3B"))
+    (((background dark)) (:foreground "#1B5C3B")))
+  "Face to highlight XML docstart comment !! in documentation tags."
+  :group 'fortpy-faces)
 
-(defvar fortpy-regex-xml-doc-links "\\(@CREF\\|QUIRK\\|TODO\\)"
-  "Regex for matching XML documentation links.")
+(defcustom fortpy:regex-xml-tags "!?<\\(/?\\(summary\\|usage\\|comments\\|parameter\\|errors\\|group\\|member\\|local\\|prereq\\|instance\\|outcome\\|mapping\\|run\\|global\\|revision\\|dimension\\)\\)[^>]*>"
+  "Regex for matching recognized XML tags in the documentation."
+  :group 'fortpy-faces)
 
-(defconst fortpy-regex-xml-attribute-value "!?<[a-z]+\\( +[a-z]+\\)=\"\\([A-Za-z0-9_ ,./]+\\)\""
-  "Regex for matching XML attributes and values.")
+(defcustom fortpy:regex-xml-doc-links "\\(@CREF\\|QUIRK\\|TODO\\)"
+  "Regex for matching XML documentation links."
+  :group 'fortpy-faces)
 
-(defconst fortpy-regex-percent "%"
+(defconst fortpy:regex-xml-attribute "\\([a-zA-z]+\\)=\""
+  "Regex for matching XML attributes.")
+
+(defconst fortpy:regex-xml-value "=\"\\([A-Za-z0-9_ ,./]+\\)\""
+  "Regex for matching XML attribute values.")
+
+(defconst fortpy:regex-percent "%"
   "Regex for matching % in Fortran.")
 
-(defconst fortpy-regex-operator "[-*+/]"
+(defconst fortpy:regex-operator "[-*+/]"
   "Regex for matching mathematical logic operators in Fortran.")
 
-;;;###autoload
-(defun fortpy:add-custom-font-lock-keywords()
-  "Adds font-lock keywords to the f90 mode for the XML documentation strings."
-  (interactive)
-  (font-lock-add-keywords 'f90-mode
-                          '(('fortpy-regex-xml-tags 1 'fortpy-xml-doc-face prepend)
-                            ('fortpy-regex-xml-doc-links 1 'fortpy-xml-doc-link-face prepend)
-                            ('fortpy-regex-xml-attribute-value 
-                             (1 'fortpy-xml-doc-attribute-face)
-                             (2 'fortpy-xml-doc-value-face)
-                             prepend
-                             )
-                            ('fortpy-regex-percent . 'fortpy-percent-face)
-                            ('fortpy-regex-operator . 'fortpy-operator-face)
-                            ))
-  )
+(defconst fortpy:regex-doc-comment "!!"
+  "Regex for matching the start of an XML documentation comment")
 
 (defconst fortpy:version "1.0.3")
 
@@ -732,6 +729,25 @@ in their Emacs configuration."
   (add-to-list 'ac-sources 'ac-source-fortpy-direct)
   (unless auto-complete-mode
     (auto-complete-mode)))
+
+;;;###autoload
+(defun fortpy:add-custom-font-lock-keywords()
+  "Adds font-lock keywords to the f90 mode for the XML documentation strings."
+  (interactive)
+  (font-lock-add-keywords 'f90-mode
+                          `((,fortpy:regex-xml-tags 1 'fortpy-xml-doc-face prepend)
+                            (,fortpy:regex-xml-doc-links 1 'fortpy-xml-doc-link-face prepend)
+                            (,fortpy:regex-doc-comment (0 'fortpy-doc-comment-face t)
+                                            (,fortpy:regex-xml-value nil nil
+                                               (1 'fortpy-xml-doc-value-face t))
+                            )
+                            (,fortpy:regex-doc-comment ,fortpy:regex-xml-attribute nil nil 
+			  		       (1 'fortpy-xml-doc-attribute-face t)
+                            )
+                            (,fortpy:regex-percent . 'fortpy-percent-face)
+                            (,fortpy:regex-operator . 'fortpy-operator-face)
+                            ))
+  )
 
 
 ;;; Call signature (get_in_function_call)
