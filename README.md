@@ -28,6 +28,14 @@ Once MELPA is on your package-archives list, execute `M-x package-install RET fo
 (setq fortpy-complete-on-bracket t)
 ```
 
+### Fortpy Configuration
+
+In most real-usage scenarios, the out-of-the-box support for multiple libraries is incomplete. A [configuration file](https://github.com/rosenbrockc/fortpy/wiki/Fortpy-Global-Configuration) can be created that gives additional information about source code folders to parse, server information for SSH editing over tramp and auto-completion configuration settings. After you have created a `config.xml` file on your system, you need to configure an environment variable to tell Fortpy where to find it:
+
+`export FORTPY_CONFIG="~/path/to/config.xml"`
+
+NOTE: Environment variables for emacs are set when it first starts; adding a config.xml file will not affect the emacs isense support until you restart emacs.
+
 ### Troubleshooting the Installation
 
 If you have trouble installing automatically from MELPA, you can also try a manual installation:
@@ -40,6 +48,17 @@ If you have trouble installing automatically from MELPA, you can also try a manu
 **NOTE:** when you run `fortpy-install-server`, emacs will use `pip install` to add the fortpyepcserver.py to the default virtualenv managed by python-environment for emacs. As part of that setup, `pip` will also install [fortpy](https://github.com/rosenbrockc/fortpy) and its dependencies into the virtualenv.
 
 If you are having trouble getting `fortpy-install-server` to work, manually run `pip install --upgrade virtualenv` and `pip install --upgrade epc` outside of emacs. Then delete the _~/.emacs.d/.python-environments/default/_ folder and re-run `fortpy-install-server`.
+
+If `fortpy-install-server` hangs, you may need to install it manually:
+
+1. in bash: `pip install -U "/path/to/fortpy-el/directory"`. Take note of the location of the `fortpyepcserver.pyc` file (i.e. which site-packages folder it got installed to). You will need this path in the next step.
+2. in your emacs configuration file, add:
+
+```lisp
+(setq fortpy-server-command '("/usr/bin/python" "/usr/local/lib/python2.7/site-packages/fortpyepcserver.pyc"))
+```
+
+Your python path and `fortpyepcserver.pyc` path will likely be different. A complete example is included to help orient you.
 
 Screenshots
 ------
