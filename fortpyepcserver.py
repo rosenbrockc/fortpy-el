@@ -118,10 +118,20 @@ def related_names(*args):
     return []
 
 def get_definition(*args):
-    return []
+    d = fortpy.isense.Script(*args).goto_definitions()
+    result = dict(
+        doc=d.fulldoc,
+        description=d.description,
+        desc_with_module="",
+        line_nr=d.line,
+        column=d.column,
+        module_path=d.module_path,
+        name=getattr(d, 'name', []),
+        full_name=getattr(d, 'full_name', []),
+        type=getattr(d, 'type', []),
+    )
 
-def get_names_recursively(definition, parent=None):
-    return []
+    return [result]
 
 def defined_names(*args):
     return []
