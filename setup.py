@@ -14,7 +14,7 @@ setup(
     name='fortpyepcserver',
     py_modules=['fortpyepcserver'],
     install_requires=[
-        "fortpy>=1.0.13",
+        "fortpy>=1.1.0",
         "epc>=0.0.4",
         "argparse",
     ],
