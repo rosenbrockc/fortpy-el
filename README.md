@@ -8,7 +8,7 @@ Fortpy-el provides an lisp package for emacs that integrates with [fortpy](https
 
 ### Emacs Package Installation
 
-The emacs package will hopefully be on MELPA soon so it can be downloaded and installed easily. If you don't already have MELPA added to your packages list, you can execute the following in your `*scratch*` buffer (using `C-x C-e`.
+If you don't already have MELPA added to your packages list, you can execute the following in your `*scratch*` buffer (using `C-x C-e`.
 
 ```lisp
 ;; Standard package.el + MELPA setup
@@ -19,7 +19,7 @@ The emacs package will hopefully be on MELPA soon so it can be downloaded and in
 (package-initialize)
 ```
 
-Once MELPA is on your package-archives list, execute `M-x package-install RET fortpy RET`. After installing the package in emacs, add the following lines to your `.emacs` file.
+Once MELPA is on your package-archives list, execute `M-x package-install RET fortpy RET`. After installing the package in emacs, add the following lines to your `.emacs` file. Note that if you want it to work right away, you will need to do a `C-x C-e` on each line.
 
 ```lisp
 ;; Standard fortpy.el setting
@@ -27,6 +27,8 @@ Once MELPA is on your package-archives list, execute `M-x package-install RET fo
 (setq fortpy-complete-on-percent t)
 (setq fortpy-complete-on-bracket t)
 ```
+
+Finally, run the following command to complete the installation: `M-x fortpy-install-server RET`.
 
 ### Fortpy Configuration
 
