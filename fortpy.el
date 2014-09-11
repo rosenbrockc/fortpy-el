@@ -391,12 +391,19 @@ Default is `fortpy:create-nested-imenu-index'."
 (defun fortpy:period-percent ()
   "Inserts a '%' instead of a period unless the previous character is a number."
   (interactive)
-  (if (equal (string-match-p "[[:digit:]]" (string (preceding-char))) 0)
-      (insert ".")
-    (if fortpy-complete-on-percent
-        (fortpy-percent-complete)
-      (insert "%")))
-)
+  (let (start end line index startchar relpt)
+    (setq start (line-beginning-position))
+    (setq end (line-end-position))
+    (setq line (buffer-substring-no-properties start end))
+    (setq index (string-match-p "!" line))
+    ;;ignore this function if we are inside of a comment region.
+    (if (or (not index) (< (- (point) start) index))
+        (if (equal (string-match-p "[[:digit:]]" (string (preceding-char))) 0)
+            (insert ".")
+          (if fortpy-complete-on-percent
+              (fortpy-percent-complete)
+            (insert "%")))
+      (insert "."))))
 
 (define-minor-mode fortpy-mode
   "Fortpy mode.
