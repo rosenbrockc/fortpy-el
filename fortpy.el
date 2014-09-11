@@ -388,6 +388,16 @@ Default is `fortpy:create-nested-imenu-index'."
 (defun fortpy:handle-post-command ()
   (fortpy:get-in-function-call-when-idle))
 
+(defun fortpy:period-percent ()
+  "Inserts a '%' instead of a period unless the previous character is a number."
+  (interactive)
+  (if (equal (string-match-p "[[:digit:]]" (string (preceding-char))) 0)
+      (insert ".")
+    (if fortpy-complete-on-percent
+        (fortpy-percent-complete)
+      (insert "%")))
+)
+
 (define-minor-mode fortpy-mode
   "Fortpy mode.
 When `fortpy-mode' is on, call signature is automatically shown as
@@ -405,7 +415,8 @@ toolitp when inside of function call.
       (define-key map "%" nil))
     (if fortpy-complete-on-bracket
         (define-key map "(" 'fortpy-bracket-complete)
-      (define-key map "(" nil)))
+      (define-key map "(" nil))
+    (define-key map (kbd ".") 'fortpy:period-percent))
   (fortpy-add-custom-font-lock-keywords)
   (if fortpy-mode
       (progn
