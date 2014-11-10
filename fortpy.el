@@ -398,7 +398,8 @@ Default is `fortpy:create-nested-imenu-index'."
     (setq index (string-match-p "!" line))
     ;;ignore this function if we are inside of a comment region.
     (if (or (not index) (< (- (point) start) index))
-        (if (equal (string-match-p "[[:digit:]]" (string (preceding-char))) 0)
+        (if (or (equal (string-match-p "[0-9([:blank:]]" (string (preceding-char))) 0)
+                (looking-back "[[:blank:](][.][[:alnum:]._]*" start))
             (insert ".")
           (if fortpy-complete-on-percent
               (fortpy-percent-complete)
