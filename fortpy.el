@@ -5,7 +5,7 @@
 
 ;; Author: Conrad Rosenbrock <rosenbrockc at gmail.com>
 ;; Package-Requires: ((epc "0.1.0") (auto-complete "1.4") (python-environment "0.0.2") (pos-tip "0.4.5"))
-;; Version: 1.0
+;; Version: 1.1
 
 ;; This file is NOT part of GNU Emacs.
 
