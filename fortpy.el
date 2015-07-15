@@ -101,7 +101,7 @@
   "Face to highlight XML docstart comment !! in documentation tags."
   :group 'fortpy-faces)
 
-(defcustom fortpy-regex-xml-tags "!?<\\(/?\\(summary\\|usage\\|comments\\|parameter\\|errors\\|group\\|member\\|local\\|prereq\\|instance\\|outcome\\|mapping\\|run\\|global\\|revision\\|dimension\\)\\)[^>]*>"
+(defcustom fortpy-regex-xml-tags "!?<\\(/?\\(summary\\|usage\\|comments\\|parameter\\|errors\\|group\\|member\\|local\\|prereq\\|instance\\|outcome\\|mapping\\|run\\|skip\\|global\\|revision\\|dimension\\)\\)[^>]*>"
   "Regex for matching recognized XML tags in the documentation."
   :group 'fortpy-faces)
 
@@ -388,6 +388,12 @@ Default is `fortpy:create-nested-imenu-index'."
 (defun fortpy:handle-post-command ()
   (fortpy:get-in-function-call-when-idle))
 
+(defun fortpy:period-face ()
+  (interactive "d")
+  (let ((face (or (get-char-property (point) 'read-face-name)
+                  (get-char-property (point) 'face))))
+    (equal face "font-lock-string-face")))
+
 (defun fortpy:period-percent ()
   "Inserts a '%' instead of a period unless the previous character is a number."
   (interactive)
@@ -398,8 +404,9 @@ Default is `fortpy:create-nested-imenu-index'."
     (setq index (string-match-p "!" line))
     ;;ignore this function if we are inside of a comment region.
     (if (or (not index) (< (- (point) start) index))
-        (if (or (equal (string-match-p "[0-9([:blank:]]" (string (preceding-char))) 0)
-                (looking-back "[[:blank:](][.][[:alnum:]._]*" start))
+        (if (or (equal (string-match-p "[0-9([:blank:]=\"']" (string (preceding-char))) 0)
+                (looking-back "[[:blank:](=][.][[:alnum:]._\"]*" start)
+                (fortpy:period-face))
             (insert ".")
           (if fortpy-complete-on-percent
               (fortpy-percent-complete)
@@ -455,6 +462,10 @@ toolitp when inside of function call.
                                (interactive) 
                                (insert "!!<local name=\"\"></local>") 
                                (backward-char 10)))
+  (define-key map (kbd "H-i") (lambda () 
+                                (interactive) 
+                                (insert "!!<member name=\"\"></member>") 
+                                (backward-char 11)))
   (define-key map (kbd "H-p") (lambda () 
                                (interactive) 
                                (insert "!!<parameter name=\"\"></parameter>") 
