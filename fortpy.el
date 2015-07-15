@@ -392,7 +392,7 @@ Default is `fortpy:create-nested-imenu-index'."
   (interactive "d")
   (let ((face (or (get-char-property (point) 'read-face-name)
                   (get-char-property (point) 'face))))
-    (equal face "font-lock-string-face")))
+    (string-equal face "font-lock-string-face")))
 
 (defun fortpy:period-percent ()
   "Inserts a '%' instead of a period unless the previous character is a number."
